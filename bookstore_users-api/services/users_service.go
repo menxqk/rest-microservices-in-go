@@ -4,11 +4,26 @@ import (
 	"fmt"
 
 	"github.com/menxqk/rest-microservices-in-go/bookstore_users-api/domain/users"
+	"github.com/menxqk/rest-microservices-in-go/bookstore_users-api/utils/crypto_utils"
 	"github.com/menxqk/rest-microservices-in-go/bookstore_users-api/utils/date"
 	"github.com/menxqk/rest-microservices-in-go/bookstore_users-api/utils/errors"
 )
 
-func GetUser(userId int64) (*users.User, *errors.RestError) {
+var (
+	UsersService usersServiceInterface = &usersService{}
+)
+
+type usersServiceInterface interface {
+	GetUser(int64) (*users.User, *errors.RestError)
+	CreateUser(users.User) (*users.User, *errors.RestError)
+	UpdateUser(bool, users.User) (*users.User, *errors.RestError)
+	DeleteUser(int64) *errors.RestError
+	SearchUsers(string) (users.Users, *errors.RestError)
+}
+
+type usersService struct{}
+
+func (us *usersService) GetUser(userId int64) (*users.User, *errors.RestError) {
 	result := &users.User{Id: userId}
 	if err := result.Get(); err != nil {
 		return nil, err
@@ -17,13 +32,14 @@ func GetUser(userId int64) (*users.User, *errors.RestError) {
 	return result, nil
 }
 
-func CreateUser(user users.User) (*users.User, *errors.RestError) {
+func (us *usersService) CreateUser(user users.User) (*users.User, *errors.RestError) {
 	if err := user.Validate(); err != nil {
 		return nil, err
 	}
 
 	user.DateCreated = date.GetNowAsString()
 	user.Status = users.STATUS_ACTIVE
+	user.Password = crypto_utils.GetMd5(user.Password)
 
 	if err := user.Save(); err != nil {
 		return nil, err
@@ -32,8 +48,8 @@ func CreateUser(user users.User) (*users.User, *errors.RestError) {
 	return &user, nil
 }
 
-func UpdateUser(isPartial bool, user users.User) (*users.User, *errors.RestError) {
-	current, err := GetUser(user.Id)
+func (us *usersService) UpdateUser(isPartial bool, user users.User) (*users.User, *errors.RestError) {
+	current, err := us.GetUser(user.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -52,14 +68,18 @@ func UpdateUser(isPartial bool, user users.User) (*users.User, *errors.RestError
 			current.Status = user.Status
 		}
 		if user.Password != "" {
-			current.Password = user.Password
+			current.Password = crypto_utils.GetMd5(user.Password)
 		}
 	} else {
 		current.FirstName = user.FirstName
 		current.LastName = user.LastName
 		current.Email = user.Email
 		current.Status = user.Status
-		current.Password = user.Password
+		if user.Password != "" {
+			current.Password = crypto_utils.GetMd5(user.Password)
+		} else {
+			current.Password = ""
+		}
 	}
 
 	fmt.Printf("current: %+v\n", current)
@@ -75,12 +95,12 @@ func UpdateUser(isPartial bool, user users.User) (*users.User, *errors.RestError
 	return current, nil
 }
 
-func DeleteUser(userId int64) *errors.RestError {
+func (us *usersService) DeleteUser(userId int64) *errors.RestError {
 	user := &users.User{Id: userId}
 	return user.Delete()
 }
 
-func Search(status string) ([]users.User, *errors.RestError) {
+func (us *usersService) SearchUsers(status string) (users.Users, *errors.RestError) {
 	dao := &users.User{}
 	return dao.FindByStatus(status)
 }

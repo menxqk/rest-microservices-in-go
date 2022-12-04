@@ -1,6 +1,7 @@
 package users
 
 import (
+	"encoding/json"
 	"strings"
 
 	"github.com/menxqk/rest-microservices-in-go/bookstore_users-api/utils/errors"
@@ -20,6 +21,8 @@ type User struct {
 	Password    string `json:"password"`
 }
 
+type Users []User
+
 func (u *User) Validate() *errors.RestError {
 	u.FirstName = strings.TrimSpace(u.FirstName)
 	u.LastName = strings.TrimSpace(u.LastName)
@@ -34,4 +37,16 @@ func (u *User) Validate() *errors.RestError {
 	}
 
 	return nil
+}
+
+func (u *User) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		Id          int64  `json:"id"`
+		DateCreated string `json:"date_created"`
+		Status      string `json:"status"`
+	}{
+		Id:          u.Id,
+		DateCreated: u.DateCreated,
+		Status:      u.Status,
+	})
 }
