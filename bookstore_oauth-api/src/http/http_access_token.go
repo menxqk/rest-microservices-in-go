@@ -2,7 +2,6 @@ package http
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/menxqk/rest-microservices-in-go/bookstore_oauth-api/src/domain/access_token"
@@ -21,7 +20,7 @@ type accessTokenHandler struct {
 }
 
 func (h *accessTokenHandler) GetById(c *gin.Context) {
-	accessTokenId := strings.TrimSpace(c.Param("access_token_id"))
+	accessTokenId := c.Param("access_token_id")
 
 	accessToken, err := h.service.GetById(accessTokenId)
 	if err != nil {

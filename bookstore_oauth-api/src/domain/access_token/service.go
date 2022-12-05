@@ -1,6 +1,10 @@
 package access_token
 
-import "github.com/menxqk/rest-microservices-in-go/bookstore_oauth-api/src/utils/errors"
+import (
+	"strings"
+
+	"github.com/menxqk/rest-microservices-in-go/bookstore_oauth-api/src/utils/errors"
+)
 
 type Repository interface {
 	GetById(string) (*AccessToken, *errors.RestError)
@@ -19,5 +23,15 @@ type service struct {
 }
 
 func (s *service) GetById(accessTokenId string) (*AccessToken, *errors.RestError) {
-	return s.repository.GetById(accessTokenId)
+	accessTokenId = strings.TrimSpace(accessTokenId)
+	if accessTokenId == "" {
+		return nil, errors.NewBadRequestError("invalid access token id")
+	}
+
+	accessToken, err := s.repository.GetById(accessTokenId)
+	if err != nil {
+		return nil, err
+	}
+
+	return accessToken, nil
 }
