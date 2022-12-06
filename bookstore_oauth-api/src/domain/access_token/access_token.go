@@ -1,7 +1,10 @@
 package access_token
 
 import (
+	"strings"
 	"time"
+
+	"github.com/menxqk/rest-microservices-in-go/bookstore_oauth-api/src/utils/errors"
 )
 
 const (
@@ -19,6 +22,24 @@ func GetNewAccessToken() *AccessToken {
 	return &AccessToken{
 		Expires: time.Now().UTC().Add(EXPIRATION_TIME).Unix(),
 	}
+}
+
+func (at *AccessToken) Validate() *errors.RestError {
+	at.AccessToken = strings.TrimSpace(at.AccessToken)
+	if at.AccessToken == "" {
+		return errors.NewBadRequestError("invalid access token id")
+	}
+	if at.UserId <= 0 {
+		return errors.NewBadRequestError("invalid user id")
+	}
+	if at.ClientId <= 0 {
+		return errors.NewBadRequestError("invalid client id")
+	}
+	if at.Expires <= 0 {
+		return errors.NewBadRequestError("invalid expiration time")
+	}
+
+	return nil
 }
 
 func (at *AccessToken) IsExpired() bool {
