@@ -6,11 +6,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/menxqk/rest-microservices-in-go/common/errors"
+	"github.com/menxqk/rest-microservices-in-go/common/oauth"
 	"github.com/menxqk/rest-microservices-in-go/users-microservice/domain/users"
 	"github.com/menxqk/rest-microservices-in-go/users-microservice/services"
 )
 
 func Get(c *gin.Context) {
+	if err := oauth.AuthenticateRequest(c.Request); err != nil {
+		c.JSON(err.Status, err)
+		return
+	}
+
 	userId, idErr := getUserId(c.Param("user_id"))
 	if idErr != nil {
 		c.JSON(idErr.Status, idErr)
