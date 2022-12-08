@@ -3,10 +3,10 @@ package services
 import (
 	"fmt"
 
+	"github.com/menxqk/rest-microservices-in-go/common/crypto"
+	"github.com/menxqk/rest-microservices-in-go/common/date"
 	"github.com/menxqk/rest-microservices-in-go/common/errors"
 	"github.com/menxqk/rest-microservices-in-go/users-microservice/domain/users"
-	"github.com/menxqk/rest-microservices-in-go/users-microservice/utils/crypto_utils"
-	"github.com/menxqk/rest-microservices-in-go/users-microservice/utils/date"
 )
 
 var (
@@ -40,7 +40,7 @@ func (us *usersService) CreateUser(user users.User) (*users.User, *errors.RestEr
 
 	user.DateCreated = date.GetNowAsString()
 	user.Status = users.STATUS_ACTIVE
-	user.Password = crypto_utils.GetMd5(user.Password)
+	user.Password = crypto.GetMd5(user.Password)
 
 	if err := user.Save(); err != nil {
 		return nil, err
@@ -69,7 +69,7 @@ func (us *usersService) UpdateUser(isPartial bool, user users.User) (*users.User
 			current.Status = user.Status
 		}
 		if user.Password != "" {
-			current.Password = crypto_utils.GetMd5(user.Password)
+			current.Password = crypto.GetMd5(user.Password)
 		}
 	} else {
 		current.FirstName = user.FirstName
@@ -77,7 +77,7 @@ func (us *usersService) UpdateUser(isPartial bool, user users.User) (*users.User
 		current.Email = user.Email
 		current.Status = user.Status
 		if user.Password != "" {
-			current.Password = crypto_utils.GetMd5(user.Password)
+			current.Password = crypto.GetMd5(user.Password)
 		} else {
 			current.Password = ""
 		}
@@ -109,7 +109,7 @@ func (us *usersService) SearchUsers(status string) (users.Users, *errors.RestErr
 func (us *usersService) LoginUser(request users.LoginRequest) (*users.User, *errors.RestError) {
 	dao := &users.User{
 		Email:    request.Email,
-		Password: crypto_utils.GetMd5(request.Password),
+		Password: crypto.GetMd5(request.Password),
 	}
 	if err := dao.FindByEmailAndPassword(); err != nil {
 		return nil, err

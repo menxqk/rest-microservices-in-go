@@ -34,20 +34,20 @@ func (r *usersRepository) LoginUser(email string, password string) (*users.User,
 
 	response := usersRestClient.Post("/users/login", request)
 	if response == nil || response.Response == nil {
-		return nil, errors.NewInternalServerError("invalid restclient response when trying to login user")
+		return nil, errors.NewInternalServerError("error when trying to login user", errors.NewError("invalid restclient response when trying to login user"))
 	}
 	if response.StatusCode > 299 { // error situation
 		var restErr errors.RestError
 		err := json.Unmarshal(response.Bytes(), &restErr)
 		if err != nil {
-			return nil, errors.NewInternalServerError("invalid error interface when trying to log user")
+			return nil, errors.NewInternalServerError("error when trying to login user", errors.NewError("invalid error interface when trying to log user"))
 		}
 		return nil, &restErr
 	}
 
 	var user users.User
 	if err := json.Unmarshal(response.Bytes(), &user); err != nil {
-		return nil, errors.NewInternalServerError("error when trying to unmarshal users response")
+		return nil, errors.NewInternalServerError("error when trying to login user", errors.NewError("error when trying to unmarshal users response"))
 	}
 
 	return &user, nil

@@ -5,9 +5,10 @@ import (
 )
 
 type RestError struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
-	Error   string `json:"error"`
+	Message string        `json:"message"`
+	Status  int           `json:"status"`
+	Error   string        `json:"error"`
+	Causes  []interface{} `json:"causes"`
 }
 
 func NewBadRequestError(message string) *RestError {
@@ -21,7 +22,7 @@ func NewBadRequestError(message string) *RestError {
 func NewUnauthorizedError(message string) *RestError {
 	return &RestError{
 		Message: message,
-		Status:  http.StatusBadRequest,
+		Status:  http.StatusUnauthorized,
 		Error:   "unauthorized",
 	}
 }
@@ -34,10 +35,14 @@ func NewNotFoundError(message string) *RestError {
 	}
 }
 
-func NewInternalServerError(message string) *RestError {
-	return &RestError{
+func NewInternalServerError(message string, err error) *RestError {
+	result := &RestError{
 		Message: message,
 		Status:  http.StatusInternalServerError,
 		Error:   "internal_server_error",
 	}
+	if err != nil {
+		result.Causes = append(result.Causes, err.Error())
+	}
+	return result
 }
