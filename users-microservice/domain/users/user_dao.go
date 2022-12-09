@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/menxqk/rest-microservices-in-go/common/errors"
+	"github.com/menxqk/rest-microservices-in-go/common/logger"
 	"github.com/menxqk/rest-microservices-in-go/users-microservice/datasources/mysql/users_db"
-	"github.com/menxqk/rest-microservices-in-go/users-microservice/logger"
 	"github.com/menxqk/rest-microservices-in-go/users-microservice/utils/mysql_utils"
 )
 

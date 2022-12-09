@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/menxqk/rest-microservices-in-go/users-microservice/logger"
+	"github.com/menxqk/rest-microservices-in-go/common/logger"
 )
 
 var (
