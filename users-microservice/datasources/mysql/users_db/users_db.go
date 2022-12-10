@@ -7,7 +7,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/menxqk/rest-microservices-in-go/common/logger"
 )
 
 const (
@@ -40,6 +42,10 @@ func init() {
 	if err = Client.Ping(); err != nil {
 		fmt.Println("could not ping database:", err)
 	}
+
+	mysql.SetLogger(logger.GetLogger())
+
+	fmt.Println("database successfully configured")
 }
 
 func loadEnv() {

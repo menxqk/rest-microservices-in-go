@@ -2,8 +2,10 @@ package elasticsearch
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	"github.com/menxqk/rest-microservices-in-go/common/logger"
 	"github.com/olivere/elastic"
 )
 
@@ -13,16 +15,21 @@ var (
 
 type esClientInterface interface {
 	setClient(c *elastic.Client)
-	Index(interface{}) (*elastic.IndexResponse, error)
+	Index(string, interface{}) (*elastic.IndexResponse, error)
 }
 
 type esClient struct {
 	client *elastic.Client
 }
 
-func (ec *esClient) Index(i interface{}) (*elastic.IndexResponse, error) {
+func (ec *esClient) Index(index string, doc interface{}) (*elastic.IndexResponse, error) {
 	ctx := context.Background()
-	return ec.client.Index().Do(ctx)
+	result, err := ec.client.Index().Index(index).BodyJson(doc).Do(ctx)
+	if err != nil {
+		logger.Error(fmt.Sprintf("error when trying to index document in %s", index), err)
+		return nil, err
+	}
+	return result, err
 
 }
 
@@ -31,11 +38,12 @@ func (ec *esClient) setClient(c *elastic.Client) {
 }
 
 func Init() {
+	log := logger.GetLogger()
 	client, err := elastic.NewClient(
 		elastic.SetURL("http://127.0.0.1:9200"),
 		elastic.SetHealthcheckInterval(10*time.Second),
-		// elastic.SetErrorLog(log.New(os.Stderr, "ELASTIC ", log.LstdFlags)),
-		// elastic.SetInfoLog(log.New(os.Stdout, "", log.LstdFlags)),
+		elastic.SetErrorLog(log),
+		elastic.SetInfoLog(log),
 	)
 	if err != nil {
 		panic(err)
