@@ -9,7 +9,7 @@ const (
 	ITEMS_INDEX = "items"
 )
 
-func (i *Item) Save() *errors.RestError {
+func (i *Item) Save() errors.RestError {
 	result, err := elasticsearch.Client.Index(ITEMS_INDEX, i)
 	if err != nil {
 		return errors.NewInternalServerError("error when trying to save item", errors.NewError("database error"))

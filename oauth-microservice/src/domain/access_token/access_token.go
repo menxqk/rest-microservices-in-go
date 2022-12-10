@@ -24,7 +24,7 @@ func GetNewAccessToken() *AccessToken {
 	}
 }
 
-func (at *AccessToken) Validate() *errors.RestError {
+func (at *AccessToken) Validate() errors.RestError {
 	at.AccessToken = strings.TrimSpace(at.AccessToken)
 	if at.AccessToken == "" {
 		return errors.NewBadRequestError("invalid access token id")

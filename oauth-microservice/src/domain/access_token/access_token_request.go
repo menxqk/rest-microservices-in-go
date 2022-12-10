@@ -20,7 +20,7 @@ type AccessTokenRequest struct {
 	ClientSecret string `json:"client_secret"`
 }
 
-func (r *AccessTokenRequest) Validate() *errors.RestError {
+func (r *AccessTokenRequest) Validate() errors.RestError {
 	switch r.GrantType {
 	case GRANT_TYPE_PASSWORD:
 		break

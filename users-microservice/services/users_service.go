@@ -14,17 +14,17 @@ var (
 )
 
 type usersServiceInterface interface {
-	GetUser(int64) (*users.User, *errors.RestError)
-	CreateUser(users.User) (*users.User, *errors.RestError)
-	UpdateUser(bool, users.User) (*users.User, *errors.RestError)
-	DeleteUser(int64) *errors.RestError
-	SearchUsers(string) (users.Users, *errors.RestError)
-	LoginUser(users.LoginRequest) (*users.User, *errors.RestError)
+	GetUser(int64) (*users.User, errors.RestError)
+	CreateUser(users.User) (*users.User, errors.RestError)
+	UpdateUser(bool, users.User) (*users.User, errors.RestError)
+	DeleteUser(int64) errors.RestError
+	SearchUsers(string) (users.Users, errors.RestError)
+	LoginUser(users.LoginRequest) (*users.User, errors.RestError)
 }
 
 type usersService struct{}
 
-func (us *usersService) GetUser(userId int64) (*users.User, *errors.RestError) {
+func (us *usersService) GetUser(userId int64) (*users.User, errors.RestError) {
 	result := &users.User{Id: userId}
 	if err := result.Get(); err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func (us *usersService) GetUser(userId int64) (*users.User, *errors.RestError) {
 	return result, nil
 }
 
-func (us *usersService) CreateUser(user users.User) (*users.User, *errors.RestError) {
+func (us *usersService) CreateUser(user users.User) (*users.User, errors.RestError) {
 	if err := user.Validate(); err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (us *usersService) CreateUser(user users.User) (*users.User, *errors.RestEr
 	return &user, nil
 }
 
-func (us *usersService) UpdateUser(isPartial bool, user users.User) (*users.User, *errors.RestError) {
+func (us *usersService) UpdateUser(isPartial bool, user users.User) (*users.User, errors.RestError) {
 	current, err := us.GetUser(user.Id)
 	if err != nil {
 		return nil, err
@@ -96,17 +96,17 @@ func (us *usersService) UpdateUser(isPartial bool, user users.User) (*users.User
 	return current, nil
 }
 
-func (us *usersService) DeleteUser(userId int64) *errors.RestError {
+func (us *usersService) DeleteUser(userId int64) errors.RestError {
 	user := &users.User{Id: userId}
 	return user.Delete()
 }
 
-func (us *usersService) SearchUsers(status string) (users.Users, *errors.RestError) {
+func (us *usersService) SearchUsers(status string) (users.Users, errors.RestError) {
 	dao := &users.User{}
 	return dao.FindByStatus(status)
 }
 
-func (us *usersService) LoginUser(request users.LoginRequest) (*users.User, *errors.RestError) {
+func (us *usersService) LoginUser(request users.LoginRequest) (*users.User, errors.RestError) {
 	dao := &users.User{
 		Email:    request.Email,
 		Password: crypto.GetMd5(request.Password),

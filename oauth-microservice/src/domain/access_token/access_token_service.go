@@ -7,15 +7,15 @@ import (
 )
 
 type Repository interface {
-	GetById(string) (*AccessToken, *errors.RestError)
-	Create(AccessToken) *errors.RestError
-	UpdateExpirationTime(AccessToken) *errors.RestError
+	GetById(string) (*AccessToken, errors.RestError)
+	Create(AccessToken) errors.RestError
+	UpdateExpirationTime(AccessToken) errors.RestError
 }
 
 type Service interface {
-	GetById(string) (*AccessToken, *errors.RestError)
-	Create(AccessToken) *errors.RestError
-	UpdateExpirationTime(AccessToken) *errors.RestError
+	GetById(string) (*AccessToken, errors.RestError)
+	Create(AccessToken) errors.RestError
+	UpdateExpirationTime(AccessToken) errors.RestError
 }
 
 func NewService(repo Repository) Service {
@@ -26,7 +26,7 @@ type service struct {
 	repository Repository
 }
 
-func (s *service) GetById(accessTokenId string) (*AccessToken, *errors.RestError) {
+func (s *service) GetById(accessTokenId string) (*AccessToken, errors.RestError) {
 	accessTokenId = strings.TrimSpace(accessTokenId)
 	if accessTokenId == "" {
 		return nil, errors.NewBadRequestError("invalid access token id")
@@ -40,7 +40,7 @@ func (s *service) GetById(accessTokenId string) (*AccessToken, *errors.RestError
 	return accessToken, nil
 }
 
-func (s *service) Create(at AccessToken) *errors.RestError {
+func (s *service) Create(at AccessToken) errors.RestError {
 	if err := at.Validate(); err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func (s *service) Create(at AccessToken) *errors.RestError {
 	return s.repository.Create(at)
 }
 
-func (s *service) UpdateExpirationTime(at AccessToken) *errors.RestError {
+func (s *service) UpdateExpirationTime(at AccessToken) errors.RestError {
 	if err := at.Validate(); err != nil {
 		return nil
 	}

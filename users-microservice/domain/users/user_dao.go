@@ -19,7 +19,7 @@ const (
 	queryFindByEmailAndPassword = "SELECT id, first_name, last_name, email, date_created, status FROM users WHERE email=? AND password=? AND status=?;"
 )
 
-func (u *User) Get() *errors.RestError {
+func (u *User) Get() errors.RestError {
 	stmt, err := users_db.Client.Prepare(queryGetUser)
 	if err != nil {
 		logger.Error("error when trying to prepare get user statement", err)
@@ -38,7 +38,7 @@ func (u *User) Get() *errors.RestError {
 	return nil
 }
 
-func (u *User) Save() *errors.RestError {
+func (u *User) Save() errors.RestError {
 	stmt, err := users_db.Client.Prepare(queryInsertUser)
 	if err != nil {
 		logger.Error("error when trying to prepare save user statement", err)
@@ -61,7 +61,7 @@ func (u *User) Save() *errors.RestError {
 	return nil
 }
 
-func (u *User) Update() *errors.RestError {
+func (u *User) Update() errors.RestError {
 	stmt, err := users_db.Client.Prepare(queryUpdateUser)
 	if err != nil {
 		logger.Error("error when trying to prepare update user statement", err)
@@ -78,7 +78,7 @@ func (u *User) Update() *errors.RestError {
 	return nil
 }
 
-func (u *User) Delete() *errors.RestError {
+func (u *User) Delete() errors.RestError {
 	stmt, err := users_db.Client.Prepare(queryDeleteUser)
 	if err != nil {
 		logger.Error("error when trying to prepare delete user statement", err)
@@ -95,7 +95,7 @@ func (u *User) Delete() *errors.RestError {
 	return nil
 }
 
-func (u *User) FindByStatus(status string) (Users, *errors.RestError) {
+func (u *User) FindByStatus(status string) (Users, errors.RestError) {
 	stmt, err := users_db.Client.Prepare(queryFindByStatus)
 	if err != nil {
 		logger.Error("error when trying to prepare find users by statys statement", err)
@@ -128,7 +128,7 @@ func (u *User) FindByStatus(status string) (Users, *errors.RestError) {
 	return results, nil
 }
 
-func (u *User) FindByEmailAndPassword() *errors.RestError {
+func (u *User) FindByEmailAndPassword() errors.RestError {
 	stmt, err := users_db.Client.Prepare(queryFindByEmailAndPassword)
 	if err != nil {
 		logger.Error("error when trying to prepare get user by email and password statement", err)
