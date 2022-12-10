@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/menxqk/rest-microservices-in-go/common/logger"
 )
 
