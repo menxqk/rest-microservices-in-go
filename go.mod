@@ -7,6 +7,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/gocql/gocql v1.3.0
 	github.com/gorilla/mux v1.8.0
+	github.com/menxqk/dotenv v0.1.0
 	github.com/mercadolibre/golang-restclient v0.0.0-20170701022150-51958130a0a0
 	github.com/olivere/elastic v6.2.37+incompatible
 	go.uber.org/zap v1.24.0

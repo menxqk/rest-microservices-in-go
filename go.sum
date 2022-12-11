@@ -55,6 +55,8 @@ github.com/mailru/easyjson v0.7.7 h1:UGYAvKxe3sBsEDzO8ZeWOSlIQfWFlxbzLZe7hwFURr0
 github.com/mailru/easyjson v0.7.7/go.mod h1:xzfreul335JAWq5oZzymOObrkdz5UnU4kGfJJLY9Nlc=
 github.com/mattn/go-isatty v0.0.14 h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9Y=
 github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27kJ6hsGG94=
+github.com/menxqk/dotenv v0.1.0 h1:7zatZKyv4uaDqluDXhndSlpwgQBfV1oYUrgfQuBzKiA=
+github.com/menxqk/dotenv v0.1.0/go.mod h1:N5IRgNXlh9okG7PS+l9WZmmyOg7YEazyit1rcxNWW18=
 github.com/mercadolibre/golang-restclient v0.0.0-20170701022150-51958130a0a0 h1:EDOjA2IGgjSBlPlnW7CzBUo/o410SMiFh670jP29Kc4=
 github.com/mercadolibre/golang-restclient v0.0.0-20170701022150-51958130a0a0/go.mod h1:Z7qYja4aGk/RWl1yJtN1LXRvC7Hsbq8SEbqWWDrMqMs=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 h1:ZqeYNhU3OHLH3mGKHDcjJRFFRrJa6eAM5H+CtDdOsPc=
